@@ -1,0 +1,78 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Tips for Writing Large \LaTeX{} Documents}
+
+\author{David Kraemer}
+\date{Today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction} \label{sec:intro}
+
+I should mention that I personally think that these tips are important for writing \LaTeX{} documents of \emph{any} size. There is a lot to be said for developing good \LaTeX{} habits that scale well. That said, you (read: I) can get away with a lot of dirty tricks when the text you are composing is only a handful of pages. To borrow from software engineering, it's quite easy to manage ``technical debt'' on small projects. Hacks and other tricks don't show their dark side to you until you've reached a scale where juggling the accumulation of bad choices begins to overpower your ability to write.
+
+\section{The Tips} \label{sec:tips}
+
+\subsection{Get to know a good \LaTeX{} text editor} \label{ssec:tips:text_editor}
+
+\subsection{Try to think systematically about your document} \label{ssec:tips:systematic_thinking}
+
+\subsection{Raise style violations to compilation errors} \label{ssec:tips:style_violations}
+
+\subsection{Write wide, not deep} \label{ssec:tips:wide_vs_deep}
+
+Every paper, report, or book should have its own directory. I come from a programming tradition where the principle file in the project is called \texttt{main.*}, and I've kept that practice with \LaTeX{} drafts.
+
+There is virtually\footnote{A potential downside to wide projects is that systematic changes (i.e., through regular expressions) have to be applied individually to each included file. I agree that this is somewhat tedious. However, a good editor will make this process painless, and the downsides to the deep approach are overwhelming. See Section~\ref{ssec:tips:regex}, below.} no reason to write a large document in a single \texttt{.tex} file. In fact, there are several reasons not to.
+
+If you're not using a robust text editor (see Section~\ref{ssec:tips:text_editor}), consider two possible worlds. In World 1, you're looking for Chapter 6 Section 4, and you spend two or three minutes scrolling up and down a 10,000-line file until you catch it. In World 2, you have a directory structure where each chapter is its own folder, and each section its own file in the folder. It takes all of ten seconds to locate the desired section.
+
+Using \verb|\include{}| properly will actually speed up the document compilation process. This is because \LaTeX{} is a little smart, and it knows to recompile the included files \emph{only} when these files have changed. No change, no recompilation. You'll notice that these files will have their own individual \texttt{.aux} files in their respective directories. That's the result of \LaTeX{} precompiling these files for direct inclusion into the body of the main text.
+
+My undergraduate computer science advisor liked to remind us that space is cheap, but confusion is expensive. I am personally the type of mind that gets easily overwhelmed by sprawling files. I start to lose the forest for the trees. It becomes harder to reason systematically about the entire document.
+
+\subsection{Learn to love regular expressions} \label{ssec:tips:regex}
+
+\subsection{Prefer semantic descriptions to numbers} \label{ssec:tips:semantic_descriptions}
+
+\subsection{Separate working and polished drafts} \label{ssec:tips:drafts}
+
+\subsection{Adopt a good label convention} \label{ssec:tips:label_rules}
+
+Every numbered item in your large \LaTeX{} document should have a label. Chapters, sections, theorems, equations, even items in an \texttt{enumerate} list\footnote{If you don't care about the number, why is it an ordered list?}. You may end up not using every label you make. But getting into the practice of writing labels is much better than the alternative. I have seen too many \LaTeX{} documents where ``\texttt{Equation (4)}'' is hard coded into the text of the document, which is one of the more pungent code smells a document can have.
+
+If everything gets a label, then we need to have some way of organizing them. Let's consider an extended example for the equation
+\begin{equation} \label{eq:tips:labels:transport}
+    \bar{c}(\mu, \nu) \stackrel{\mathrm{def}}{=}
+    \inf_{\pi \in C(\mu, \nu)}
+    \int_{\mathbb{X} \times \mathbb{Y}}
+    c(x,y) \
+    \pi(dx,dy)
+    \qquad \mu \in \mathbb{P}(\mathbb{X}),
+    \quad  \nu \in \mathbb{P}(\mathbb{Y}).
+\end{equation}
+For context,~\eqref{eq:tips:labels:transport} is the cost function in optimal transport theory. Here are my suggestions:
+\begin{itemize}
+    \item The beginning of a label should simply indicate the type of the item being labeled. If I'm labeling a theorem, the label begins \texttt{thm:}; if I'm labeling an equation, the label begins \texttt{eq:}; and so on. I put this at the beginning of the label, because when I am in the process of writing and I think to myself, ``oh, now I need to reference this equation,'' the first thing that comes to mind is that the reference is an \emph{equation}.
+    \item The next parts of the label should indicate where the item is located in your text. In an article, that means indicating the section; in a report, thesis, or dissertation, that means including the chapter (or part) that houses the item. If~\eqref{eq:tips:labels:transport} is from a chapter on metric spaces in a section concerning optimal transport theorems, I would put the preface \texttt{eq:metric\_spaces:transport} in the label.
+    \item The actual item should be given a semantically descriptive label. The label up to this point carefully documents where the label is located, which usually will let you describe the actual item in a few short words. For~\ref{eq:tips:labels:transport}, it's enough to add the word \texttt{cost} or potentially \texttt{cost\_function} to the label text. Then our complete label is
+    \begin{verbatim}
+        \label{eq:metric_spaces:transport:cost_function}
+    \end{verbatim}
+    which uniquely identifies the equation in a fashion that can be easily indexed. It's also quite descriptive, since we know that ``cost function'' is referring to a specific construction for optimal transport in metric spaces.
+    \item Be consistent. The chapter
+    \item Don't use numbers\footnote{Semantically significant numbers get a pass. But use sparingly! English is an asset, not a liability.} in your labels. One of the most annoying and difficult things in maintaining a large \LaTeX{} file is updating your files when the organization of the sections in a paper (or chapter) changes.
+
+    The labeling system I've proposed above is not immune to some difficulties itself. If you swap sections in a paper, then you don't need to make any changes. But if you move content between sections, you might need to update the relevant parts of the label path. It's a little annoying and easy to forget. On the other hand, a good text editor (see Section~\ref{ssec:tips:text_editor}) can make global refactoring of an individual label a one-click affair.
+\end{itemize}
+
+\subsection{BiB\TeX{} conventions to live by} \label{ssec:tips:bibtex}
+
+\section{Conclusion} \label{sec:conclusion}
+
+
+\end{document}
